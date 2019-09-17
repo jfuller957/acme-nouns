@@ -54,26 +54,27 @@ Person.hasMany(Thing);
 const syncAndSeed = async()=> {
   await conn.sync({ force: true });
 
-  const persons = [
-    { name: 'Larry' },
-    { name: 'Curly' },
-    { name: 'Moe' }
-  ];
-
   const places = [
     { name: 'Los Angeles' },
     { name: 'Oceanside' },
     { name: 'DEATH VALLEY' }
   ];
 
-  const things = [
-    { name: 'patience' },
-    { name: 'time' },
-    { name: 'headshot' }
+  const [LA, OC, DV] = await Promise.all(places.map( place => Place.create(place)));
+
+  const persons = [
+    { name: 'Larry', placeId: LA.id },
+    { name: 'Curly', placeId: OC.id },
+    { name: 'Moe', placeId: DV.id }
   ];
 
-  await Promise.all(persons.map( person => Person.create(person)));
-  await Promise.all(places.map( place => Place.create(place)));
+  const [Larry, Curly, Moe] = await Promise.all(persons.map( person => Person.create(person)));
+  const things = [
+    { name: 'patience', personId: Larry.id },
+    { name: 'time', personId: Curly.id },
+    { name: 'headshot', personId: Moe.id }
+  ];
+
   await Promise.all(things.map( thing => Thing.create(thing)));
 
 };
