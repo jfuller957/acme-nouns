@@ -4,6 +4,10 @@ const app = express();
 const { Person, Place, Thing } = db.models;
 const path = require('path');
 
+app.get('/', (req, res, next)=> {
+  res.sendFile(path.join(__dirname, './index.html'))
+});
+
 app.get('/api/persons', (req, res, next)=> {
   Person.findAll()
     .then( persons => res.send(persons))
