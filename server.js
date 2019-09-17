@@ -8,13 +8,13 @@ app.get('/', (req, res, next)=> {
   res.sendFile(path.join(__dirname, './index.html'))
 });
 
-app.get('/api/persons', (req, res, next)=> {
+app.get('/api/people', (req, res, next)=> {
   Person.findAll()
     .then( persons => res.send(persons))
     .catch(next);
 });
 
-app.get('/api/persons/:id', (req, res, next)=> {
+app.get('/api/people/:id', (req, res, next)=> {
   Person.findByPk(req.params.id)
     .then( person => res.send(person))
     .catch(next);
