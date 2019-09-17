@@ -5,6 +5,11 @@ const { STRING, UUID, UUIDV4 } = Sequelize;
 const conn = new Sequelize('postgres://localhost/acme_nouns');
 
 const Person = conn.define('person', {
+  id: {
+    type: UUID,
+    primaryKey: true,
+    defaultValue: UUIDV4
+  },
   name: {
     type: STRING,
     unique: true,
@@ -14,6 +19,11 @@ const Person = conn.define('person', {
 });
 
 const Place = conn.define('place', {
+  id: {
+    type: UUID,
+    primaryKey: true,
+    defaultValue: UUIDV4
+  },
   name: {
     type: STRING,
     unique: true,
@@ -23,6 +33,11 @@ const Place = conn.define('place', {
 });
 
 const Thing = conn.define('thing', {
+  id: {
+    type: UUID,
+    primaryKey: true,
+    defaultValue: UUIDV4
+  },
   name: {
     type: STRING,
     unique: true,
@@ -30,6 +45,11 @@ const Thing = conn.define('thing', {
     notEmpty: true
   }
 });
+
+Person.belongsTo(Place);
+Place.hasMany(Person);
+Thing.belongsTo(Person);
+Person.hasMany(Thing);
 
 const syncAndSeed = async()=> {
   await conn.sync({ force: true });
@@ -58,4 +78,11 @@ const syncAndSeed = async()=> {
 
 };
 
-syncAndSeed();
+module.exports = {
+  syncAndSeed,
+  models: {
+    Person,
+    Place,
+    Thing
+  }
+};
